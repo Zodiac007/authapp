@@ -11,26 +11,31 @@ import { useState } from "react";
 export default function AuditorsFields() {
   const [email, setEmail] = useState("");
   const router = useRouter(); // Add this line
+
   const handleSignIn = async (account) => {
-    const response = await signIn(account)
-    console.log(response)
-  }
+    try {
+      await signIn(account);
+    } catch (e) {
+      console.log("Unable to sign in", e);
+    }
+  };
 
   const handleEmailSubmit = () => {
-    console.log(email)
+    console.log(email);
+
     if (email) {
+      localStorage.setItem("useremail", email);
       // Add the email to local storage
       addUserEmail(email);
       setEmail(""); // Clear the input field
     } else {
       console.log("Email cannot be empty.");
     }
-  }
-
+  };
 
   const addUserEmail = (email) => {
     // Retrieve the existing object from local storage (if it exists)
-    const storedEmailsJSON = localStorage.getItem('uniqueEmails');
+    const storedEmailsJSON = localStorage.getItem("uniqueEmails");
     let uniqueEmails = {};
 
     // Parse the stored object or initialize an empty object if it doesn't exist
@@ -46,20 +51,24 @@ export default function AuditorsFields() {
       let updatedEmailsJSON = JSON.stringify(uniqueEmails);
 
       // Store the updated object back in local storage
-      localStorage.setItem('uniqueEmails', updatedEmailsJSON);
-      router.push("/")
+      localStorage.setItem("uniqueEmails", updatedEmailsJSON);
+      router.push("/");
 
       console.log(`Email '${email}' added to local storage.`);
     } else {
-      router.push("/dashboard")
+      router.push("/dashboard");
       console.log(`Email '${email}' already exists in local storage.`);
     }
-  }
+  };
 
   return (
     <div className="my-4">
       <div className="mx-20">
-        <IconButton onClick={() => handleSignIn("google")} src={GoogleIcon} text="Login using your Google Account" />
+        <IconButton
+          onClick={() => handleSignIn("google")}
+          src={GoogleIcon}
+          text="Login using your Google Account"
+        />
 
         <div>
           <InputField
@@ -71,7 +80,11 @@ export default function AuditorsFields() {
           />
         </div>
 
-        <TextButton text={"Submit"} onClick={handleEmailSubmit} />
+        <TextButton
+          href="/dashboard"
+          text={"Submit"}
+          onClick={handleEmailSubmit}
+        />
       </div>
     </div>
   );

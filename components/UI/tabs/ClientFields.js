@@ -17,8 +17,38 @@ export default function ClientFields() {
   const { data: session } = useSession();
   const { address, chainId, connectWallet } = useWeb3();
 
+  async function handleOnSubmit(e) {
+    e.preventDefault();
+
+    console.log("fields", fields);
+    console.log("errors", errors);
+    console.log("formValid", formValid);
+
+    const formData = {};
+    [...e.currentTarget.elements].map((field) => {
+      if (!field.name) return false;
+      checkValidation([field.name], field.value);
+      setFields({ ...fields, [field.name]: field.value });
+    });
+
+    if (formValid === false) return false;
+
+    try {
+      const response = await fetch("/api/mail", {
+        method: "post",
+        body: JSON.stringify(formData),
+      });
+      const body = await response.json();
+      console.log(body);
+    } catch (error) {
+      console.log(error);
+    }
+
+    console.log(formData);
+  }
+
   const handleEmailSubmit = () => {
-    console.log(email)
+    console.log(email);
     if (email) {
       // Add the email to local storage
       addUserEmail(email);
@@ -26,8 +56,7 @@ export default function ClientFields() {
     } else {
       console.log("Email cannot be empty.");
     }
-  }
-
+  };
 
   function connectwithWallet() {
     if (window.ethereum) {
@@ -38,39 +67,37 @@ export default function ClientFields() {
     }
   }
   const handleSignIn = async (account) => {
-    const response = await signIn(account)
-    console.log(response)
-  }
-
+    const response = await signIn(account);
+    console.log(response);
+  };
 
   const addUserEmail = (email) => {
-      // Retrieve the existing object from local storage (if it exists)
-      const storedEmailsJSON = localStorage.getItem('uniqueEmails');
-      let uniqueEmails = {};
-  
-      // Parse the stored object or initialize an empty object if it doesn't exist
-      if (storedEmailsJSON) {
-        uniqueEmails = JSON.parse(storedEmailsJSON);
-      }
-      // Check if the email already exists in the object
-      if (!uniqueEmails.hasOwnProperty(email)) {
-        // Add the email to the object
-        uniqueEmails[email] = true;
-  
-        // Serialize the object to JSON
-        let updatedEmailsJSON = JSON.stringify(uniqueEmails);
-  
-        // Store the updated object back in local storage
-        localStorage.setItem('uniqueEmails', updatedEmailsJSON);
-        router.push("/")
-  
-        console.log(`Email '${email}' added to local storage.`);
-      } else {
-        router.push("/dashboard")
-        console.log(`Email '${email}' already exists in local storage.`);
-      }
+    // Retrieve the existing object from local storage (if it exists)
+    const storedEmailsJSON = localStorage.getItem("uniqueEmails");
+    let uniqueEmails = {};
+
+    // Parse the stored object or initialize an empty object if it doesn't exist
+    if (storedEmailsJSON) {
+      uniqueEmails = JSON.parse(storedEmailsJSON);
     }
-  
+    // Check if the email already exists in the object
+    if (!uniqueEmails.hasOwnProperty(email)) {
+      // Add the email to the object
+      uniqueEmails[email] = true;
+
+      // Serialize the object to JSON
+      let updatedEmailsJSON = JSON.stringify(uniqueEmails);
+
+      // Store the updated object back in local storage
+      localStorage.setItem("uniqueEmails", updatedEmailsJSON);
+      router.push("/");
+
+      console.log(`Email '${email}' added to local storage.`);
+    } else {
+      router.push("/dashboard");
+      console.log(`Email '${email}' already exists in local storage.`);
+    }
+  };
 
   // useEffect(() => {
   //   if(session || address){
@@ -80,7 +107,7 @@ export default function ClientFields() {
   //     }
   //     else{
   //       router.push("/")
-  //     }  
+  //     }
   //   }
 
   // },[session, address])
@@ -122,15 +149,21 @@ export default function ClientFields() {
 
         <div>
           <InputField
+            type="email"
             src={EmailIcon}
             label={"Email"}
             placeholder={"Email Address"}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            isRequired={true}
           />
         </div>
 
-        <TextButton text={"Submit"} onClick={handleEmailSubmit} />
+        <TextButton
+          href="/dashboard"
+          text={"Submit"}
+          onClick={handleEmailSubmit}
+        />
       </div>
     </div>
   );

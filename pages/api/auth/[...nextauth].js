@@ -15,18 +15,24 @@ export const authOptions = {
     }),
     // ...add more providers here
   ],
+
+  events: {
+    async signIn(msg) {
+      console.log("msg", msg);
+      localStorage.setItem("userData", msg);
+    },
+  },
+
   callbacks: {
-    async signIn(user, account, profile) {
-        console.log("signIn callback called");
-      // This callback is called when the user signs in using Google.
-      // You can check if the user is a first-time user here.
-      // If it's their first time, set a flag in the user object.
-      // For example:
-      user.isFirstTimeLogin = true;
-      return true; // Allow sign-in
+    async jwt({ token, user, account, profile, isNewUser }) {
+      console.log("x->new user property", isNewUser);
+      // if (account.isNewUser) {
+      //   // This user is signing in for the first time
+      //   // You can perform any actions specific to new users here
+      // }
+      return token; // Allow sign-in
     },
   },
 };
-
 
 export default NextAuth(authOptions);
