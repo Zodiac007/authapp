@@ -6,13 +6,14 @@ import WalletIcon from "@/public/images/wallet-icon.svg";
 import EmailIcon from "@/public/images/mail-line.svg";
 import TextButton from "@/components/common/TextButton";
 import { useWeb3 } from "@3rdweb/hooks";
-import { useSession, signIn, signOut } from "next-auth/react"
+import { useSession, signIn, signOut } from "next-auth/react";
+
 
 
 
 export default function ClientFields() {
   const { data: session } = useSession()
-  const {address, chainId, connectWallet} = useWeb3();
+  const {address, chainId, connectWallet, disconnectWallet} = useWeb3();
   console.log(session);
 
   function connectwithWallet(){
@@ -33,7 +34,7 @@ export default function ClientFields() {
     <div className="my-4">
       <div className="mx-20">
         <IconButton onClick={() => signIn()}  src={GoogleIcon} text="Login using your Google Account" />
-        <IconButton src={GithubIcon} text="Login using your Github Account" />
+        <IconButton onClick={() => signIn()} src={GithubIcon} text="Login using your Github Account" />
         <IconButton onClick={() => connectwithWallet()}  src={WalletIcon} text="Login using your Wallet" />
         {address ?
    
