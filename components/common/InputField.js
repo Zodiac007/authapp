@@ -4,8 +4,8 @@ export default function InputField({ src, label, placeholder }) {
   return (
     <>
       <label
-        for="email"
-        class="block text-sm font-medium leading-9 text-gray-900"
+        htmlFor="email"
+        className="block text-sm font-medium leading-9 text-gray-900"
       >
         {label}
       </label>
@@ -14,7 +14,7 @@ export default function InputField({ src, label, placeholder }) {
         <input
           name="email"
           type="text"
-          class="pl-10 pr-4 py-3 border rounded-full w-full shadow"
+          className="pl-10 pr-4 py-3 border rounded-full w-full shadow"
           placeholder={placeholder}
         />
         <div

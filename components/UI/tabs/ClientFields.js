@@ -5,14 +5,54 @@ import GoogleIcon from "@/public/images/google-icon.svg";
 import WalletIcon from "@/public/images/wallet-icon.svg";
 import EmailIcon from "@/public/images/mail-line.svg";
 import TextButton from "@/components/common/TextButton";
+import { useWeb3 } from "@3rdweb/hooks";
+import { useSession, signIn, signOut } from "next-auth/react"
+
+
 
 export default function ClientFields() {
+  const { data: session } = useSession()
+  const {address, chainId, connectWallet} = useWeb3();
+  console.log(session);
+
+  function connectwithWallet(){
+    if(window.ethereum){
+    connectWallet("injected")
+    }
+    else{
+      console.log("get metamask")
+      alert("Get MetaMask Wallet first.")
+    }
+
+  }
+
+  
+
+
   return (
     <div className="my-4">
       <div className="mx-20">
-        <IconButton src={GoogleIcon} text="Login using your Google Account" />
+        <IconButton onClick={() => signIn()}  src={GoogleIcon} text="Login using your Google Account" />
         <IconButton src={GithubIcon} text="Login using your Github Account" />
-        <IconButton src={WalletIcon} text="Login using your Wallet" />
+        <IconButton onClick={() => connectwithWallet()}  src={WalletIcon} text="Login using your Wallet" />
+        {address ?
+   
+        <div>
+          <p>Address: {address}</p>
+          <p>ChainId: {chainId}</p>
+        </div>
+        
+        : ""}
+        {session ?
+   
+          <div>
+            <p>Email: {session.user.email}</p>
+            <button onClick={() => signOut()} >logout</button>
+          </div>
+          
+          : ""}
+    
+  
 
         <div>
           <InputField
