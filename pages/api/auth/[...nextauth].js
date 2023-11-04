@@ -17,6 +17,7 @@ export const authOptions = {
   ],
   callbacks: {
     async signIn(user, account, profile) {
+        console.log("signIn callback called");
       // This callback is called when the user signs in using Google.
       // You can check if the user is a first-time user here.
       // If it's their first time, set a flag in the user object.
@@ -26,5 +27,6 @@ export const authOptions = {
     },
   },
 };
+
 
 export default NextAuth(authOptions);

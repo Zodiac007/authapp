@@ -38,7 +38,7 @@ export default function Tab() {
       </div>
 
       <div className="tab-content pt-6">
-        {activeTab === 1 && <ContactDetailForm />}
+        {activeTab === 1 && <AuditorsFields />}
         {activeTab === 2 && <ClientFields />}
       </div>
     </div>

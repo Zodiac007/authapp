@@ -5,13 +5,16 @@ import GoogleIcon from "@/public/images/google-icon.svg";
 import WalletIcon from "@/public/images/wallet-icon.svg";
 import EmailIcon from "@/public/images/mail-line.svg";
 import TextButton from "@/components/common/TextButton";
+import { useRouter } from "next/router";
 import { useWeb3 } from "@3rdweb/hooks";
 import { useSession, signIn, signOut } from "next-auth/react";
+import { useEffect } from "react";
 
 export default function ClientFields() {
+  const router = useRouter(); // Add this line
   const { data: session } = useSession();
   const { address, chainId, connectWallet } = useWeb3();
-  console.log(session);
+
 
   function connectwithWallet() {
     if (window.ethereum) {
@@ -22,16 +25,28 @@ export default function ClientFields() {
     }
   }
 
+  function handleSignIn(account){
+    console.log("signing in...")
+    signIn(account);
+  }
+
+  useEffect(() => {
+    if(session || address){
+      router.push("/dashboard");
+    }
+
+  },[session, address])
+
   return (
     <div className="my-4">
       <div className="mx-20">
         <IconButton
-          onClick={() => signIn("google")}
+          onClick={() => handleSignIn("google")}
           src={GoogleIcon}
           text="Login using your Google Account"
         />
         <IconButton
-          onClick={() => signIn("github")}
+          onClick={() => handleSignIn("github")}
           src={GithubIcon}
           text="Login using your Github Account"
         />

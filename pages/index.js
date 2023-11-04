@@ -1,9 +1,20 @@
 import Tab from "@/components/UI/tabs/Tabs";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
+import { useWeb3 } from "@3rdweb/hooks";
 
 export default function Home() {
-  const { query } = useRouter();
+  //const { query } = useRouter();
+  const router = useRouter(); // Add this line
+  const { data: session } = useSession();
+  const { address } = useWeb3();
+  useEffect(() => {
+    if(session || address){
+      router.push("/dashboard");
+    }
+  },[session, address])
 
   return (
     <div className="flex w-full h-screen">
