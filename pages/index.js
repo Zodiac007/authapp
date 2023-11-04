@@ -12,9 +12,51 @@ export default function Home() {
   const { address } = useWeb3();
   useEffect(() => {
     if(session || address){
-      router.push("/dashboard");
+      //console.log(JSON.parse(localStorage.getItem('uniqueEmails'))[session.user.email]);
+
+      
+      let credentials = session ? session.user.email : address;
+      if(localStorage.getItem('uniqueEmails')  && JSON.parse(localStorage.getItem('uniqueEmails'))[credentials]){
+        router.push("/dashboard");
+      }
+      else{
+        if(session){
+          addUniqueEmail(session.user.email);
+        }
+        else{
+          addUniqueEmail(address);
+        }
+        router.push("/")
+      }  
     }
-  },[session, address])
+  }, [session, address])
+
+  function addUniqueEmail(email) {
+    // Retrieve the existing object from local storage (if it exists)
+    const storedEmailsJSON = localStorage.getItem('uniqueEmails');
+    let uniqueEmails = {};
+  
+    // Parse the stored object or initialize an empty object if it doesn't exist
+    if (storedEmailsJSON) {
+      uniqueEmails = JSON.parse(storedEmailsJSON);
+    }
+  
+    // Check if the email already exists in the object
+    if (!uniqueEmails.hasOwnProperty(email)) {
+      // Add the email to the object
+      uniqueEmails[email] = true;
+  
+      // Serialize the object to JSON
+      let updatedEmailsJSON = JSON.stringify(uniqueEmails);
+  
+      // Store the updated object back in local storage
+      localStorage.setItem('uniqueEmails', updatedEmailsJSON);
+  
+      console.log(`Email '${email}' added to local storage.`);
+    } else {
+      console.log(`Email '${email}' already exists in local storage.`);
+    }
+  }
 
   return (
     <div className="flex w-full h-screen">

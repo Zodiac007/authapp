@@ -24,18 +24,24 @@ export default function ClientFields() {
       alert("Get MetaMask Wallet first.");
     }
   }
-
-  function handleSignIn(account){
-    console.log("signing in...")
-    signIn(account);
-  }
-
-  useEffect(() => {
-    if(session || address){
-      router.push("/dashboard");
+    const handleSignIn = async (account) => {
+      const response = await signIn(account)
+      console.log(response)
     }
+  
 
-  },[session, address])
+  // useEffect(() => {
+  //   if(session || address){
+
+  //     if(localStorage.getItem("uniqueEmails")){
+  //       router.push("/dashboard");
+  //     }
+  //     else{
+  //       router.push("/")
+  //     }  
+  //   }
+
+  // },[session, address])
 
   return (
     <div className="my-4">
