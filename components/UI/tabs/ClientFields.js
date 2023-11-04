@@ -9,11 +9,24 @@ import { useRouter } from "next/router";
 import { useWeb3 } from "@3rdweb/hooks";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useEffect } from "react";
+import { useState } from "react";
 
 export default function ClientFields() {
   const router = useRouter(); // Add this line
+  const [email, setEmail] = useState("");
   const { data: session } = useSession();
   const { address, chainId, connectWallet } = useWeb3();
+
+  const handleEmailSubmit = () => {
+    console.log(email)
+    if (email) {
+      // Add the email to local storage
+      addUserEmail(email);
+      setEmail(""); // Clear the input field
+    } else {
+      console.log("Email cannot be empty.");
+    }
+  }
 
 
   function connectwithWallet() {
@@ -24,9 +37,38 @@ export default function ClientFields() {
       alert("Get MetaMask Wallet first.");
     }
   }
-    const handleSignIn = async (account) => {
-      const response = await signIn(account)
-      console.log(response)
+  const handleSignIn = async (account) => {
+    const response = await signIn(account)
+    console.log(response)
+  }
+
+
+  const addUserEmail = (email) => {
+      // Retrieve the existing object from local storage (if it exists)
+      const storedEmailsJSON = localStorage.getItem('uniqueEmails');
+      let uniqueEmails = {};
+  
+      // Parse the stored object or initialize an empty object if it doesn't exist
+      if (storedEmailsJSON) {
+        uniqueEmails = JSON.parse(storedEmailsJSON);
+      }
+      // Check if the email already exists in the object
+      if (!uniqueEmails.hasOwnProperty(email)) {
+        // Add the email to the object
+        uniqueEmails[email] = true;
+  
+        // Serialize the object to JSON
+        let updatedEmailsJSON = JSON.stringify(uniqueEmails);
+  
+        // Store the updated object back in local storage
+        localStorage.setItem('uniqueEmails', updatedEmailsJSON);
+        router.push("/")
+  
+        console.log(`Email '${email}' added to local storage.`);
+      } else {
+        router.push("/dashboard")
+        console.log(`Email '${email}' already exists in local storage.`);
+      }
     }
   
 
@@ -83,10 +125,12 @@ export default function ClientFields() {
             src={EmailIcon}
             label={"Email"}
             placeholder={"Email Address"}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
 
-        <TextButton text={"Submit"} href="/dashboard" />
+        <TextButton text={"Submit"} onClick={handleEmailSubmit} />
       </div>
     </div>
   );
