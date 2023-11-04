@@ -10,7 +10,7 @@ export default function InputField({ src, label, placeholder }) {
         {label}
       </label>
 
-      <div class="relative">
+      <div className="relative">
         <input
           name="email"
           type="text"
@@ -18,7 +18,7 @@ export default function InputField({ src, label, placeholder }) {
           placeholder={placeholder}
         />
         <div
-          class="absolute inset-y-0 right-0 pr-8 
+          className="absolute inset-y-0 right-0 pr-8 
                       flex items-center  
                       pointer-events-none"
         >

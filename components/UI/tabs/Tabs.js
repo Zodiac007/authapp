@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ClientFields from "./ClientFields";
 import AuditorsFields from "./AuditorsFields";
+import ContactDetailForm from "./ContactDetailForm";
 
 export default function Tab() {
   const [activeTab, setActiveTab] = useState(1);
@@ -37,7 +38,7 @@ export default function Tab() {
       </div>
 
       <div className="tab-content pt-6">
-        {activeTab === 1 && <AuditorsFields />}
+        {activeTab === 1 && <ContactDetailForm />}
         {activeTab === 2 && <ClientFields />}
       </div>
     </div>
